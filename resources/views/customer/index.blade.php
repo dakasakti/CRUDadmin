@@ -46,7 +46,8 @@
                     <th> Action </th>
                 </tr>
             </thead>
-            <tbody class="align-middle">      
+            <tbody class="align-middle">
+                     
             </tbody>
         </table>
     </div>
@@ -72,13 +73,15 @@
                 serverSide: true,
                 ajax: "{{ url('customer') }}",
                 columns: [
-                { data: 'id', name: 'id' },
+                { "data" : "id", render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }},
                 { data: 'code', name: 'code' },
                 { data: 'customer', name: 'customer' },
                 { data: 'city', name: 'city' },
-                {data: 'action', name: 'action', orderable: false},
+                { data: 'action', name: 'action', orderable: false},
                 ],
-                order: [[0, 'desc']]
+                // order: [[0, 'desc']]
             });
         });
 
