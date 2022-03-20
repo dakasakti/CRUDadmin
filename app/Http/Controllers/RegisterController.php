@@ -9,7 +9,7 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        return view('register');
+        return view('auth.register');
     }
 
     public function store(Request $request)
@@ -27,6 +27,6 @@ class RegisterController extends Controller
         
         // $request->session()->flash('success','Register Successfull , Please Login');
 
-        return redirect('/')->with('success','Register Successfull , Please Login');
+        return redirect('/login')->with('success','Register Successfull , Please Login');
     }
 }

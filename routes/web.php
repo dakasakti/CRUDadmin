@@ -20,36 +20,28 @@ use App\Http\Controllers\CustomerController;
 |
 */
 
-Route::get('/home', function () {
+// Route::get('/mdlcustom', function () {
+//     return view('customer.modal');
+// });
+
+// Route::resource('/customer', CustomerController::class);
+
+Route::get('/', function () {
     return view('beranda');
-})->middleware('auth');
+});
 
-route::get('/',[LoginController::class,'index'])->name('login')->middleware('guest');
-route::post('/',[LoginController::class,'authentication']);
-route::post('/logout',[LoginController::class,'logout']);
+route::get('/login',[LoginController::class,'index'])->name('login')->middleware('guest');
+route::post('/login',[LoginController::class,'authentication'])->name('auth');
 
+route::post('/logout',[LoginController::class,'logout'])->name('logout');
+route::get('/register',[RegisterController::class,'index'])->name('register')->middleware('guest');
+route::post('/register',[RegisterController::class,'store'])->name('register.store');
 
-route::get('/register',[RegisterController::class,'index'])->middleware('guest');
-route::post('/register',[RegisterController::class,'store']);
-
-Route::get('/dash', function () {
+Route::get('/dashboard', function () {
     return view('dashboard');
-});
-Route::get('/custom', function () {
-    return view('customer.index');
-});
-Route::get('/data', function () {
-    return Datatables::of(Customer::query())
-    ->addColumn('action','action')
-    ->make(true);
-})->name('data');
+})->name('dashboard');
 
-
-Route::get('/custdel', function () {
-    return view('customervajra');
-});
-
-Route::get('/mdlcustom', function () {
-    return view('customer.modal');
-});
-Route::resource('/cust', CustomerController::class)->parameters(['cust' => 'Customer:id']);
+Route::get('/customer', [CustomerController::class, 'index']);
+Route::post('store-company', [CustomerController::class, 'store']);
+Route::post('edit-company', [CustomerController::class, 'edit']);
+Route::post('delete-company', [CustomerController::class, 'destroy']);

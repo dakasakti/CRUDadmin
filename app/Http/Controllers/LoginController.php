@@ -10,7 +10,7 @@ class LoginController extends Controller
     public function index()
     
     {
-        return view('login');
+        return view('auth.login');
     }
 
     public function authentication(Request $request)
@@ -23,8 +23,9 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/dash');
+            return redirect()->intended('/dashboard');
         }
+        
         return back() ->with('error','Login Failed');
     }
 

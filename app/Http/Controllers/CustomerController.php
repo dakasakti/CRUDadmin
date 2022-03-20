@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Customers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
@@ -16,7 +17,15 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('/dash');
+        if(request()->ajax()) {
+            return datatables()->of(Customer::select('*'))
+            ->addColumn('action', 'customer.action')
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
+        }
+
+        return view('customer.index');
     }
 
     /**
@@ -26,7 +35,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('/custom');
+        //
     }
 
     /**
@@ -37,36 +46,32 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {   
-        // //validasi data dulu
-        // $request->validate([
+        $companyId = $request->id;
+        $company = Customer::updateOrCreate(
+            [
+                'id' => $companyId
+            ],
+            [
+               'code' => $request->code, 
+               'date' => $request->date,
+               'customer' => $request->customer,
+               'city' => $request->city
+            ]
+        );    
+                         
+        return Response()->json($company);
+
+        // $regcus = $request->validate([
         //     'code' => 'required',
         //     'date' => 'required',
         //     'customer' => 'required',
         //     'city'=>'required',
         // ]);
-        // 	// insert data ke table customer
-	    // DB::table('customer')->insert([
-		// 'code'            => $request->code,
-		// 'date'            => $request->date,
-		// 'customer'        => $request->customer,
-		// 'city'            => $request->city
-	    // ]);
-        // User::create($request);
-	    //     // alihkan halaman ke halaman customer
-	    // return redirect('/dash');
 
-        $regcus = $request->validate([
-            'code' => 'required',
-            'date' => 'required',
-            'customer' => 'required',
-            'city'=>'required',
-        ]);
-
-        Customer::create($regcus);
+        // Customer::create($regcus);
         
         // $request->session()->flash('success','Register Successfull , Please Login');
-
-        return redirect('/custom')->with('success','Data Entry Success');
+        // return redirect('/customer')->with('success','Data Entry Success');
     }
 
     /**
@@ -75,7 +80,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
         //
     }
@@ -86,10 +91,12 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        $customer = Customer::findOrFail($id);
-        return view('/custom', compact('customer'));
+        $where = array('id' => $request->id);
+        $company = Customer::where($where)->first();
+      
+        return Response()->json($company);
     }
 
     /**
@@ -99,17 +106,9 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $regcus = $request->validate([
-            'code' => 'required',
-            'date' => 'required',
-            'customer' => 'required',
-            'city'=>'required',
-        ]);
-
-        
-
+    public function update()
+    {   
+        //
     }
 
     /**
@@ -118,11 +117,13 @@ class CustomerController extends Controller
      * @param  \app\models\Customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Request $request)
     
     {  
-        dd($customer);
-    //    $customer->delete();
-        return redirect('/custom')->with('success','Data Delete Success');
+        $company = Customer::where('id', $request->id)->delete();
+        return Response()->json($company);
+
+        // Customer::destroy($customer->id);
+        // return redirect('/customer')->with('success','Data Delete Success');
     }
 }

@@ -4,14 +4,14 @@
             <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/dash') ? 'active' : '' }}" aria-current="page"
-                            href="/dash">
+                        <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" aria-current="page"
+                            href="/dashboard">
                             <span data-feather="home"></span>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/customer/index') ? 'active' : '' }}" href="/custom">
+                        <a class="nav-link {{ Request::is('customer*') ? 'active' : '' }}" href="/customer">
                             <span data-feather="file-text"></span>
                             Customer
                         </a>
